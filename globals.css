@@ -1,0 +1,215 @@
+/*
+ * Acme Design System · v1.0 · globals.css
+ * Tailwind CSS v4 + shadcn/ui. Source of truth: Figma "Acme Design System".
+ * Every CSS variable here matches a Figma variable 1:1 (see "code syntax" on each variable).
+ *
+ * Rules (full version in DESIGN.md):
+ * - Use semantic utilities only (bg-background, text-muted-foreground, border-border, bg-brand …).
+ * - Never use raw hex values, primitives (bg-neutral-*, bg-blue-*) or arbitrary values in components.
+ * - Primary = near-black / near-white. Blue (brand, link, ring) is an accent, never a large surface.
+ */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ */
+/* Semantic tokens · Light (Figma: "Color / Light")                    */
+/* ------------------------------------------------------------------ */
+:root {
+  --radius: 0.75rem; /* 12px · cards, code blocks */
+
+  --background: #ffffff;              /* base/white */
+  --foreground: #0a0a0a;              /* neutral/950 */
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+
+  --primary: #0a0a0a;                 /* near-black. Never blue. */
+  --primary-hover: #262626;           /* neutral/800 */
+  --primary-foreground: #fafafa;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;        /* neutral/500 */
+  --accent: #f5f5f5;                  /* shadcn accent = neutral hover surface, NOT brand */
+  --accent-foreground: #171717;
+
+  --destructive: #dc2626;             /* red/600 */
+  --destructive-subtle: #fef2f2;
+  --border: #e5e5e5;                  /* neutral/200 */
+  --border-strong: #d4d4d4;           /* neutral/300 */
+  --input: #e5e5e5;
+  --ring: #2563eb;                    /* blue/600 */
+
+  --brand: #2563eb;                   /* blue/600 */
+  --brand-foreground: #ffffff;
+  --brand-subtle: #eff6ff;            /* blue/50 */
+  --link: #2563eb;
+
+  --success: #16a34a;
+  --success-subtle: #f0fdf4;
+  --warning: #d97706;
+  --warning-subtle: #fffbeb;
+
+  --grid-line: #f5f5f5;               /* neutral/100 */
+  --code-background: #fafafa;         /* neutral/50 */
+
+  --shadow: rgb(0 0 0 / 0.05);
+  --shadow-popover: rgb(0 0 0 / 0.08);
+}
+
+/* ------------------------------------------------------------------ */
+/* Semantic tokens · Dark (Figma: "Color / Dark")                      */
+/* ------------------------------------------------------------------ */
+.dark {
+  --background: #0a0a0a;              /* neutral/950 */
+  --foreground: #fafafa;              /* neutral/50 */
+  --card: #111111;                    /* neutral/925 */
+  --card-foreground: #fafafa;
+  --popover: #171717;                 /* neutral/900 */
+  --popover-foreground: #fafafa;
+
+  --primary: #fafafa;                 /* near-white in dark */
+  --primary-hover: #e5e5e5;
+  --primary-foreground: #0a0a0a;
+  --secondary: #262626;
+  --secondary-foreground: #fafafa;
+  --muted: #171717;
+  --muted-foreground: #a3a3a3;        /* neutral/400 */
+  --accent: #262626;
+  --accent-foreground: #fafafa;
+
+  --destructive: #ef4444;             /* red/500 */
+  --destructive-subtle: #450a0a;
+  --border: #262626;                  /* neutral/800 */
+  --border-strong: #404040;
+  --input: #262626;
+  --ring: #3b82f6;                    /* blue/500 */
+
+  --brand: #3b82f6;                   /* blue/500 */
+  --brand-foreground: #ffffff;
+  --brand-subtle: #172554;            /* blue/950 */
+  --link: #60a5fa;                    /* blue/400 */
+
+  --success: #4ade80;
+  --success-subtle: #052e16;
+  --warning: #fbbf24;
+  --warning-subtle: #451a03;
+
+  --grid-line: #171717;
+  --code-background: #111111;
+
+  --shadow: transparent;              /* no card shadows in dark, borders do the work */
+  --shadow-popover: rgb(0 0 0 / 0.5);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tailwind theme mapping (utilities: bg-*, text-*, border-*, ring-*)  */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  /* Fonts: load with next/font (see DESIGN.md) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-subtle: var(--destructive-subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-link: var(--link);
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-grid-line: var(--grid-line);
+  --color-code-background: var(--code-background);
+
+  /* Radius (Figma: Radius collection) */
+  --radius-sm: calc(var(--radius) - 4px);  /*  8px · inputs */
+  --radius-md: calc(var(--radius) - 2px);  /* 10px · tabs, menu items */
+  --radius-lg: var(--radius);              /* 12px · cards, code blocks */
+  --radius-xl: calc(var(--radius) + 4px);  /* 16px · large panels */
+  --radius-full: 9999px;                   /* buttons, badges */
+
+  /* Shadows (Figma: Shadow/XS, Shadow/SM, Shadow/MD) */
+  --shadow-xs: 0 1px 2px 0 var(--shadow);
+  --shadow-sm: 0 1px 2px 0 var(--shadow), 0 4px 12px -2px var(--shadow);
+  --shadow-md: 0 2px 6px 0 var(--shadow-popover), 0 8px 24px -4px var(--shadow-popover);
+}
+
+/* Static additions to the Tailwind theme */
+@theme {
+  --color-neutral-925: #111111;
+
+  /* Layout (Figma: Spacing / layout/*) · utilities: py-section, px-gutter, max-w-site */
+  --spacing-section: 6rem;          /* 96px */
+  --spacing-section-mobile: 4rem;   /* 64px */
+  --spacing-gutter: 1.5rem;         /* 24px */
+  --container-site: 75rem;          /* 1200px */
+
+  /* Type scale (Figma text styles). Body sizes use Tailwind defaults:
+     Body/LG = text-lg, Body/MD = text-base, Body/SM = text-sm, Body/XS = text-xs */
+  --text-display-xl: 4rem;          --text-display-xl--line-height: 4.25rem;  --text-display-xl--letter-spacing: -0.03em;  --text-display-xl--font-weight: 500;
+  --text-display-lg: 3.5rem;        --text-display-lg--line-height: 3.75rem;  --text-display-lg--letter-spacing: -0.03em;  --text-display-lg--font-weight: 500;
+  --text-h1: 3rem;                  --text-h1--line-height: 3.25rem;          --text-h1--letter-spacing: -0.025em;         --text-h1--font-weight: 500;
+  --text-h2: 2.25rem;               --text-h2--line-height: 2.5rem;           --text-h2--letter-spacing: -0.02em;          --text-h2--font-weight: 500;
+  --text-h3: 1.5rem;                --text-h3--line-height: 2rem;             --text-h3--letter-spacing: -0.015em;         --text-h3--font-weight: 500;
+  --text-h4: 1.25rem;               --text-h4--line-height: 1.75rem;          --text-h4--letter-spacing: -0.01em;          --text-h4--font-weight: 500;
+  --text-lg--letter-spacing: -0.005em;
+  --text-label-sm: 0.8125rem;       --text-label-sm--line-height: 1.125rem;   /* 13/18 · small buttons, badges, tabs */
+  --text-code: 0.875rem;            --text-code--line-height: 1.375rem;       /* 14/22 · Mono/MD */
+  --text-code-sm: 0.8125rem;        --text-code-sm--line-height: 1.25rem;     /* 13/20 · Mono/SM */
+  --text-eyebrow: 0.75rem;          --text-eyebrow--line-height: 1rem;        --text-eyebrow--letter-spacing: 0.04em; --text-eyebrow--font-weight: 500;
+}
+
+/* Decorative background grid (Figma: grid-line, 48px cells on cover) */
+@utility bg-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  ::selection {
+    @apply bg-brand-subtle text-foreground;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

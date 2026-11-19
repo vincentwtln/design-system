@@ -1,0 +1,15 @@
+{
+  "name": "@vincentwtln/design-system",
+  "version": "1.0.0",
+  "description": "Acme Design System: Tailwind CSS v4 tokens (globals.css) and the rules for humans and coding agents (DESIGN.md, RULES.md).",
+  "repository": "github:vincentwtln/design-system",
+  "files": [
+    "globals.css",
+    "DESIGN.md",
+    "RULES.md"
+  ],
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0",
+    "tw-animate-css": "^1.0.0"
+  }
+}
