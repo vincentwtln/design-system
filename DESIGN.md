@@ -54,13 +54,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 | `primary` / `primary-foreground` | #0A0A0A / #FAFAFA | #FAFAFA / #0A0A0A | **Primary button** (never blue) |
 | `primary-hover` | #262626 | #E5E5E5 | Primary hover |
 | `secondary` | #F5F5F5 | #262626 | Neutral surfaces, neutral badge |
-| `muted` / `muted-foreground` | #F5F5F5 / #737373 | #171717 / #A3A3A3 | Subtle areas / supporting text |
+| `muted` / `muted-foreground` | #F5F5F5 / #6B6B6B | #171717 / #A3A3A3 | Subtle areas / supporting text |
 | `accent` / `accent-foreground` | #F5F5F5 | #262626 | **Hover surface** (shadcn naming!) – not brand |
-| `border` · `border-strong` · `input` | #E5E5E5 · #D4D4D4 · #E5E5E5 | #262626 · #404040 · #262626 | Hairlines, hover borders, inputs |
+| `border` · `border-strong` · `input` | #E5E5E5 · #D4D4D4 · #8A8A8A | #262626 · #404040 · #666666 | Hairlines, hover borders, input outlines (≥ 3:1) |
 | `ring` | #2563EB | #3B82F6 | Focus ring |
-| `brand` / `brand-foreground` / `brand-subtle` | #2563EB / #FFF / #EFF6FF | #3B82F6 / #FFF / #172554 | Accents, highlights, badges |
+| `brand` / `brand-foreground` / `brand-subtle` | #2563EB / #FFF / #EFF6FF | #60A5FA / #0A0A0A / #172554 | Accents, highlights, badges |
 | `link` | #2563EB | #60A5FA | Inline links |
-| `success` · `warning` · `destructive` (+ `-subtle`) | green-600 · amber-600 · red-600 | green-400 · amber-400 · red-500 | Status only |
+| `success` · `warning` · `destructive` (+ `-subtle`) | green-700 · amber-700 · red-700 | green-400 · amber-400 · red-400 | Status only |
 | `grid-line` | #F5F5F5 | #171717 | Background grid (`bg-grid`) |
 | `code-background` | #FAFAFA | #111111 | Code blocks, terminal |
 
@@ -155,7 +155,7 @@ Figma component names in **bold**. All variants and properties exist in the Figm
 
 **Badge** – `inline-flex items-center rounded-full px-2 py-0.5 text-label-sm font-medium`. Variants: neutral `bg-secondary text-secondary-foreground`, brand `bg-brand-subtle text-brand`, success/warning/destructive analogous with `-subtle`, outline `border text-foreground`.
 
-**Input** – `h-10 rounded-sm border border-input bg-background px-3 text-sm shadow-xs placeholder:text-muted-foreground hover:border-border-strong`. Focus: ring (see above). Error: `border-destructive` + helper text `text-sm text-destructive`. Optional leading icon (`Search`, muted-foreground, `pl-9`).
+**Input** – `h-10 rounded-sm border border-input bg-background px-3 text-base md:text-sm shadow-xs placeholder:text-muted-foreground hover:border-foreground`. 16px below md, or iOS zooms in on focus. Focus: ring (see above). Error: `border-destructive` + helper text `text-sm text-destructive`. Optional leading icon (`Search`, muted-foreground, `pl-9`).
 
 ### Navigation
 
@@ -205,7 +205,7 @@ Recommended order: Announcement Bar → Navbar → Hero → Logo Wall → Featur
 
 ## 9. Accessibility
 
-- Contrast: `muted-foreground` on `background` is ≥ 4.5:1 in both modes. Don't lighten text with `opacity`.
+- Contrast (WCAG 2.2 AA, both modes): every text token is ≥ 4.5:1 on every surface it sits on (`background`, `card`, `muted`/`secondary`/`accent`, its `-subtle`); input outlines and the focus ring ≥ 3:1. Don't lighten text with `opacity`.
 - Every interactive element has a visible focus ring (section 6). Icon-only buttons need `aria-label`.
 - Minimum touch target on mobile: 40px (`h-10`); use `sm` buttons only on desktop/in the navbar.
 - Use semantic HTML: `<header>`, `<nav>`, `<main>`, `<section aria-labelledby>`, `<footer>`. One `<h1>` per page (the hero).
