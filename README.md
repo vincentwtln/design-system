@@ -14,7 +14,7 @@ coding agents follow.
 Requires Tailwind CSS v4 and `tw-animate-css` (peer dependencies).
 
 ```sh
-npm i github:vincentwtln/design-system#v1.0.0 tw-animate-css
+npm i github:vincentwtln/design-system#v1.1.0 tw-animate-css
 ```
 
 Stylesheet:
