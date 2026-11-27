@@ -1,7 +1,9 @@
 /*
- * Acme Design System · v1.1 · globals.css
+ * Acme Design System · v1.2 · globals.css
  * Tailwind CSS v4 + shadcn/ui. Source of truth: Figma "Acme Design System".
- * Every CSS variable here matches a Figma variable 1:1 (see "code syntax" on each variable).
+ * Every CSS variable here matches a Figma variable 1:1 by name (see "code syntax" on each variable).
+ * Values: this file wins. Figma may lag behind (DESIGN.md §11 lists known drift).
+ * Contrast is checked by `npm run check` (scripts/check-contrast.mjs).
  *
  * Rules (full version in DESIGN.md):
  * - Use semantic utilities only (bg-background, text-muted-foreground, border-border, bg-brand …).

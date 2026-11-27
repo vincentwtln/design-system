@@ -1,9 +1,9 @@
 # Acme Design System · DESIGN.md
 
-> **For coding agents:** This file is the contract for every UI you build for the Acme landing page. Read it before writing markup. If something isn't covered here, choose the quieter, more minimal option and match existing components. Never invent new colors, sizes or radii.
+> **For coding agents:** This file is the contract for every UI you build with this design system. Read it before writing markup. If something isn't covered here, choose the quieter, more minimal option and match existing components. Never invent new colors, sizes or radii.
 
 - **Figma source of truth:** https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q (pages: *Cover & Guide*, *Foundations*, *Components*)
-- **Tokens in code:** `app/globals.css` (Tailwind v4 + shadcn/ui). Figma variable names = CSS variable names 1:1. Each Figma variable carries its CSS name as *code syntax*.
+- **Tokens in code:** `globals.css` of this package, imported via `@import "@vincentwtln/design-system/globals.css"` (Tailwind v4 + shadcn/ui). Figma variable names = CSS variable names 1:1. Each Figma variable carries its CSS name as *code syntax*.
 - **Stack:** Next.js (App Router) · Tailwind CSS v4 · shadcn/ui · lucide-react · `next/font`
 
 ---
@@ -177,7 +177,7 @@ Figma component names in **bold**. All variants and properties exist in the Figm
 
 **Tabs / Tab** – Line tabs: list `flex gap-4 border-b`, trigger `pb-2 text-label-sm font-medium text-muted-foreground hover:text-foreground`, active `text-foreground` + 2px `foreground` underline (`after:` pseudo element or `border-b-2 -mb-px`). Typical use: npm / pnpm / yarn / bun above a code block.
 
-### Marketing *(spec, Figma pending)*
+### Marketing
 
 **Feature Card** – `rounded-lg border bg-card p-6 shadow-xs`. Icon in a `size-9 rounded-md border bg-background` box (icon `size-4`, `text-foreground`; at most one highlighted card uses `text-brand`), title `text-h4 mt-4`, text `text-sm text-muted-foreground mt-2`. Hover: `hover:border-border-strong` only. Optional "Learn more" link at the bottom.
 
@@ -187,7 +187,72 @@ Figma component names in **bold**. All variants and properties exist in the Figm
 
 **Logo Wall** – Eyebrow "Trusted by teams at" (`text-eyebrow font-mono text-muted-foreground`, centered), logos in grayscale `opacity-60 hover:opacity-100 transition-opacity`, height 24–28px, grid `grid-cols-3 md:grid-cols-6 gap-8`, optionally separated by `border-y`.
 
-**FAQ Accordion** – shadcn `Accordion type="single" collapsible`. Item `border-b`, trigger `py-5 text-base font-medium text-left hover:no-underline`, icon `Plus` → rotates 45° (`duration-200`), content `pb-5 text-sm text-muted-foreground max-w-2xl`. Section layout: headline left, list right on lg (`grid lg:grid-cols-[1fr_2fr]`).
+**FAQ Item / FAQ Accordion** – shadcn `Accordion type="single" collapsible`. Item `border-b`, trigger `py-5 text-base font-medium text-left hover:no-underline`, icon `Plus` → rotates 45° (`duration-200`), content `pb-5 text-sm text-muted-foreground max-w-2xl`. Section layout: headline left, list right on lg (`grid lg:grid-cols-[1fr_2fr]`).
+
+### Feedback
+
+**Toast** – [sonner](https://sonner.emilkowal.ski) via shadcn (`npx shadcn@latest add sonner`), `<Toaster />` once in the root layout. Figma: component set *Toast* (`Type` = Default / Success / Error / Warning; booleans *Description*, *Action*, *Close*).
+- Surface `rounded-lg border bg-popover text-popover-foreground p-4 shadow-md`, sonner's default width (356px). Icon left, text column, close button top right.
+- Icon (not on Default): `size-5 rounded-full bg-{role}-subtle text-{role}` with lucide `Check` (success) / `X` (error) at `size-3`, or a `!` (`text-xs font-semibold`) for warning. No `info` type, no `richColors`.
+- Title `text-sm font-medium`, description `text-sm text-muted-foreground` (optional). Action: `outline` `sm` button **below** the description (`mt-2`), never beside the title. Close: `X` `size-3.5 text-muted-foreground`.
+- Behaviour: `position="bottom-right"` (sonner goes full width at the bottom on small screens by itself), max. 3 visible, 4s duration, errors 8s.
+- Copy: the title states the result ("Payment received", not "Success!"); amounts and details go into the description.
+- Money: `CHF 10.–` for whole francs, otherwise `CHF 10.50`. Format with `Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' })` and replace a trailing `.00` with `.–`.
+- Not for form validation (inline error on the field) and not for destructive confirmations (use a dialog).
+
+```ts
+toast.success('Zahlung erfasst', { description: 'CHF 10.– · Visa •••• 4242' })
+toast.error('Zahlung fehlgeschlagen', {
+  description: 'Die Karte wurde abgelehnt.',
+  duration: 8000,
+  action: { label: 'Erneut versuchen', onClick: retry },
+})
+```
+
+Reference `components/ui/sonner.tsx` (replaces the shadcn default; verify visually in light and dark):
+
+```tsx
+'use client'
+import { Check, X } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { Toaster as Sonner, type ToasterProps } from 'sonner'
+
+const dot = 'flex size-5 items-center justify-center rounded-full'
+const icons = {
+  success: <span className={`${dot} bg-success-subtle text-success`}><Check className="size-3" strokeWidth={2} /></span>,
+  error: <span className={`${dot} bg-destructive-subtle text-destructive`}><X className="size-3" strokeWidth={2} /></span>,
+  warning: <span className={`${dot} bg-warning-subtle text-warning text-xs font-semibold`}>!</span>,
+  close: <X className="size-3.5" />,
+}
+
+export function Toaster(props: ToasterProps) {
+  const { theme = 'system' } = useTheme()
+  return (
+    <Sonner
+      theme={theme as ToasterProps['theme']}
+      position="bottom-right"
+      visibleToasts={3}
+      duration={4000}
+      closeButton
+      icons={icons}
+      toastOptions={{
+        unstyled: true,
+        classNames: {
+          // grid: icon | text; the action sits in the text column below the description
+          toast: 'relative grid w-full grid-cols-[auto_1fr] items-start rounded-lg border bg-popover p-4 pr-10 font-sans text-popover-foreground shadow-md',
+          icon: 'row-span-2 mr-3',
+          content: 'col-start-2 flex flex-col gap-0.5',
+          title: 'text-sm font-medium',
+          description: 'text-sm text-muted-foreground',
+          actionButton: 'col-start-2 mt-2 inline-flex h-8 items-center justify-self-start rounded-full border bg-background px-3 text-label-sm font-medium hover:border-border-strong hover:bg-accent',
+          closeButton: 'absolute right-3 top-3 flex size-5 items-center justify-center rounded-sm text-muted-foreground hover:bg-accent hover:text-foreground',
+        },
+      }}
+      {...props}
+    />
+  )
+}
+```
 
 ---
 
@@ -233,3 +298,40 @@ Recommended order: Announcement Bar → Navbar → Hero → Logo Wall → Featur
 - **Plan limits (Figma Starter):** one mode per variable collection, so light values live in *Color / Light* (bound in components) and dark values in *Color / Dark* (same names, reference only). Max 3 pages, so component groups are sections on the *Components* page. After upgrading to Professional, *Color / Dark* can be merged into *Color / Light* as a real "Dark" mode.
 - Collections: *Primitives* (hidden from pickers), *Color / Light*, *Color / Dark*, *Spacing* (incl. `layout/*`), *Radius*. Text styles: Display, Heading, Body, Label, Mono. Effect styles: Shadow/XS, SM, MD, Focus/Ring.
 - If something differs between Figma and this file, **globals.css + DESIGN.md win in code**. Report the difference so Figma can be updated.
+
+**Node IDs** (for `get_design_context` / `get_screenshot`, one node at a time):
+
+| Component | Node |
+|---|---|
+| Foundations (page) | [4:2](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=4-2) |
+| Button | [6:138](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=6-138) |
+| Icon Button | [6:187](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=6-187) |
+| Link | [7:100](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=7-100) |
+| Badge | [7:113](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=7-113) |
+| Input | [7:139](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=7-139) |
+| Copy Button | [8:100](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=8-100) |
+| Tabs / Tab | [8:108](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=8-108) |
+| Code Block | [8:117](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=8-117) |
+| Terminal | [8:126](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=8-126) |
+| Logo | [9:101](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=9-101) |
+| Announcement Bar | [9:104](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=9-104) |
+| Navbar | [9:166](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=9-166) |
+| Footer | [9:167](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=9-167) |
+| Feature Card | [11:183](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=11-183) |
+| Pricing Card | [11:250](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=11-250) |
+| Testimonial | [11:253](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=11-253) |
+| Logo Wall | [11:263](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=11-263) |
+| FAQ Item | [11:301](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=11-301) |
+| FAQ Accordion | [11:302](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=11-302) |
+| Toast | [11:397](https://www.figma.com/design/bT57WjgcDOi6f3tm9RcY9Q?node-id=11-397) |
+
+**Known drift (Figma lags behind code):** the WCAG fixes of v1.1.0 are not in the Figma variables yet. Code is correct; Figma still shows the v1.0 values for:
+
+| Variable | Figma (v1.0) | Code (v1.1+) |
+|---|---|---|
+| Light `muted-foreground` | #737373 | #6B6B6B |
+| Light `input` | #E5E5E5 | #8A8A8A |
+| Light `destructive` · `success` · `warning` | red-600 · green-600 · amber-600 | red-700 · green-700 · amber-700 |
+| Dark `input` | #262626 | #666666 |
+| Dark `destructive` | #EF4444 | #F87171 |
+| Dark `brand` / `brand-foreground` | #3B82F6 / #FFFFFF | #60A5FA / #0A0A0A |
