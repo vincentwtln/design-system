@@ -30,4 +30,9 @@ its site-specific decisions.
     },
   })
   ```
+- **Figma is a reference, not the source of values.** Use the Figma MCP only for a specific node
+  from the table in DESIGN.md §11, one node at a time. If Figma and `globals.css` disagree, the code
+  wins (known drift is listed in §11).
+- **Feedback:** toasts only via the shared `<Toaster />` (DESIGN.md §7 › Feedback); never build a
+  second toast/notification system. Form errors stay inline on the field.
 - **Before every PR:** run through the Do/Don't table in DESIGN.md §10.
